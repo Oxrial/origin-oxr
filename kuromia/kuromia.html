@@ -114,8 +114,8 @@
 		const { createApp } = Vue
 		const app = Vue.createApp({
 			setup() {
-				const english = window.songs.english.sort()
-				const zhcn = window.songs.zhcn
+				const english = _.uniq(window.songs.english).sort()
+				const zhcn = _.uniq(window.songs.zhcn)
 				const max = _.max
 				return {
 					english,
