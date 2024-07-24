@@ -1,4 +1,5 @@
 var songs ={ english : [
+	'Fly',
 	'Happy new year!!!',
 	'Happy brithday!!!',
 	'Forever young',
@@ -166,7 +167,6 @@ var songs ={ english : [
 	'痒',
 	'让',
 	'紫',
-	'Fly',
 	'默',
 	'马',
 	'喂',
