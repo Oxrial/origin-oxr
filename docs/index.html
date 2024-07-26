@@ -1,11 +1,156 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SINGLE-OXR</title>
-</head>
-<body>
-    <iframe src="../kuromia/kuromia.html" frameborder="0"></iframe>
-</body>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"
+		/>
+		<title>KUROMIA - 库洛米娅</title>
+		<link rel="stylesheet" href="https://gitee.com/oxrial/single-oxr/raw/master/plugins/index.min.css" />
+		<script src="https://gitee.com/oxrial/single-oxr/raw/master/plugins/vue.global.js"></script>
+		<script src="https://gitee.com/oxrial/single-oxr/raw/master/plugins/index.full.min.js"></script>
+		<script src="https://gitee.com/oxrial/single-oxr/raw/master/plugins/lodash.min.js"></script>
+		<script src="https://gitee.com/oxrial/single-oxr/raw/master/kuromia/songs.js"></script>
+		<style>
+			.el-row {
+				padding: 1.25rem;
+			}
+			.el-col:first-child {
+				margin-right: 1.25rem;
+			}
+			.song-item {
+				margin: 0 0.5rem 0.625rem 0;
+				/* max-width: 7.5rem; */
+				white-space: break-spaces;
+			}
+			.song-list {
+				display: block;
+				border: 0.0625rem dashed gray;
+				border-radius: 1.25rem;
+				margin-bottom: 1.25rem;
+			}
+			.song-low {
+				min-width: 5rem;
+			}
+			.song-list .el-card__body {
+				padding-right: unset;
+				padding-bottom: unset;
+			}
+			.el-tag {
+				justify-content: flex-start;
+				height: unset;
+				padding: 0.3125rem 0 0.3125rem 0.5625rem;
+			}
+			body {
+				background-image: linear-gradient(
+					45deg,
+					#fffcfd 25%,
+					#bae5ff 25%,
+					#bae5ff 50%,
+					#fffcfd 50%,
+					#fffcfd 75%,
+					#bae5ff 75%,
+					#bae5ff 100%
+				);
+				background-size: 3.5356rem 3.5356rem;
+			}
+			@media screen and (orientation: landscape) {
+				#app {
+					width: 51%;
+					margin: 0 auto;
+				}
+			}
+			.slogan {
+				margin: 0 auto;
+				background: url(https://gitee.com/oxrial/single-oxr/raw/master/kuromia/cool-background.png);
+				background-repeat: no-repeat;
+				background-size: cover;
+			}
+			.logo {
+				text-shadow: 0.0625rem 0.0625rem 0.125rem black;
+				color: white;
+				font-size: 4.375rem;
+				font-weight: bolder;
+			}
+			.logo-cn {
+				text-shadow: 0.0625rem 0.0625rem 0.125rem black;
+				color: #a2d3ff;
+				font-size: 2.25rem;
+				font-weight: bolder;
+				text-align: right;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="app">
+			<el-card class="slogan">
+				<div class="logo">KUROMIA</div>
+				<div class="logo-cn">库洛米娅</div>
+			</el-card>
+			<el-card v-for="i in 5" class="song-list">
+				<div
+					:ref="i == 1 ? `songListRef${i}` : ''"
+					:style="{height: (ceil(songzh[`s${i}`].length / floor(wwidth/iw)) * ih) / 16 + 'rem'}"
+					style="display: flex; flex-direction: column; flex-wrap: wrap"
+				>
+					<el-tag v-for="item in songzh[`s${i}`]" class="song-item song-low" disable-transitions>
+						{{item}}
+					</el-tag>
+				</div>
+			</el-card>
+			<el-card class="song-list" v-for="k in ['so','english']">
+				<div
+					:style="{height: (ceil(songzh[k].length / 2) * ih + ih) /16 + 'rem'}"
+					style="display: flex; flex-direction: column; flex-wrap: wrap; align-content: flex-start"
+				>
+					<el-tag
+						v-for="item in songzh[k]"
+						class="song-item"
+						disable-transitions
+						:style="{'width': `${(wwidth/2-ih/2)/16}rem`}"
+					>
+						{{item}}
+					</el-tag>
+				</div>
+			</el-card>
+		</div>
+	</body>
+	<script type="module">
+		const { createApp, ref, onMounted, watch } = Vue
+		const app = Vue.createApp({
+			setup() {
+				const { max, floor, ceil } = _
+				const zhcn = _.uniq(window.songs.zhcn)
+				const songzh = {}
+				for (let i = 1; i <= 5; i++)
+					songzh[`s${i}`] = zhcn.filter((c) => c.length === i).sort((a, b) => a.localeCompare(b, 'zh'))
+				songzh.so = zhcn.filter((c) => c.length > 5).sort((a, b) => a.localeCompare(b, 'zh'))
+				songzh.english = _.uniq(window.songs.english).sort()
+				const ih = 34
+				const iw = 88
+				const songListRef1 = ref()
+				const wwidth = ref(0)
+
+				onMounted(() => {
+					const { offsetWidth: s1w, offsetHeight: s1h } = songListRef1.value[0]
+					wwidth.value = s1w
+					console.log(wwidth)
+				})
+				return {
+					wwidth,
+					songzh,
+					zhcn,
+					max,
+					floor,
+					ceil,
+					songListRef1,
+					iw,
+					ih
+				}
+			}
+		})
+		app.use(ElementPlus).mount('#app')
+	</script>
 </html>
